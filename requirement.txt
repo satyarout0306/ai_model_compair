@@ -2,3 +2,5 @@ ollama>=0.3.0
 pydantic>=2.6
 pandas>=2.2
 rich>=13.7
+matplotlib>=3.7.0
+numpy>=1.24.0
