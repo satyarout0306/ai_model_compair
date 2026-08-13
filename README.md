@@ -1,4 +1,4 @@
-# Offline LLM Structured-Output Benchmark
+# Offline Model Compairision
 
 Benchmark local Ollama models on their ability to produce valid, schema-conformant
 JSON output — with an automatic validate → retry-on-failure loop.
