@@ -1,0 +1,26 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# System dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies first for Docker layer caching
+COPY requirement.txt .
+
+RUN pip install --no-cache-dir -r requirement.txt
+
+# Copy project
+COPY . .
+
+# Create result directory
+RUN mkdir -p benchmark/results
+
+CMD ["python", "benchmark_cli.py", "full", \
+     "--models", "llama3.2:3b", "qwen2.5:7b", "phi3:mini", \
+     "--output", "benchmark/results", \
+     "--max-retries", "3"]
