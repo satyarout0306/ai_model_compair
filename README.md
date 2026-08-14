@@ -89,3 +89,73 @@ You'd need to hand-label a sample of these for accuracy scoring.
   and see if it beats prompt-only enforcement.
 - Wrap `core/generator.py` in a small CLI chat assistant that always returns structured actions
   (e.g. a local "offline assistant" that outputs `{intent, args}` for a fixed tool set).
+
+## Project architecture
+```
+                    Test Data
+                       │
+                       ▼
+                Task Generator
+                       │
+                       ▼
+                 Prompt Builder
+                       │
+             ┌─────────┼─────────┐
+             ▼         ▼         ▼
+          Llama      Qwen      Phi
+             │         │         │
+             └─────────┼─────────┘
+                       ▼
+                  JSON Output
+                       │
+                       ▼
+               Pydantic Validation
+                       │
+                ┌──────┴──────┐
+                │             │
+              PASS           FAIL
+                │             │
+                ▼             ▼
+             Metrics       Retry Prompt
+                              │
+                              ▼
+                           LLM again
+```
+
+## Docker Pipeline
+```
+GitHub Push / PR
+       ↓
+GitHub Actions
+       ↓
+Build Docker image
+       ↓
+Install/start Ollama
+       ↓
+Pull 3 models
+       ↓
+Run benchmark
+       ↓
+Generate JSON + report + graphs
+       ↓
+Upload reports as GitHub Actions artifacts
+```
+## Test Automation of the LLMs
+
+```
+New model
+   ↓
+CI pipeline
+   ↓
+Run evaluation dataset
+   ↓
+Calculate metrics
+   ↓
+Compare against baseline
+   ↓
+Threshold?
+ ┌─┴─┐
+Yes No
+ ↓   ↓
+Pass Fail
+```
