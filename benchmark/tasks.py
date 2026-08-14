@@ -1,8 +1,3 @@
-"""Define different difficulty levels of ticket extraction tasks.
-
-This module uses schemas from schemas/ (simple.py, medium.py, hard.py) and pairs
-them with input formatting functions and ground truth extraction functions.
-"""
 
 from enum import Enum
 from typing import Optional
