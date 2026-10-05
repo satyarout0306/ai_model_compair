@@ -139,40 +139,48 @@ def run_benchmark(
     return results
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(description="Benchmark Ollama models on employee ticket extraction")
+    parser.add_argument(
+        "mode",
+        nargs="?",
+        choices=["full", "run"],
+        default="full",
+        help="Benchmark mode. Supported values: full, run",
+    )
     parser.add_argument(
         "--models",
         nargs="+",
-        default=["llama2-7b-chat"],
-        help="Ollama models to benchmark (default: llama2-7b-chat)"
+        default=["llama3.2:3b", "qwen2.5:7b", "phi3:mini"],
+        help="Ollama models to benchmark (default: llama3.2:3b qwen2.5:7b phi3:mini)",
     )
     parser.add_argument(
         "--max-retries",
         type=int,
         default=3,
-        help="Max retries per test case (default: 3)"
+        help="Max retries per test case (default: 3)",
     )
     parser.add_argument(
+        "--output",
         "--output-dir",
+        dest="output_dir",
         type=str,
         default="benchmark/results",
-        help="Directory to save results (default: benchmark/results)"
+        help="Directory to save results (default: benchmark/results)",
     )
     parser.add_argument(
         "--csv-path",
         type=str,
-        help="Path to Historical_ticket_data.csv (optional, uses default if not provided)"
+        help="Path to Historical_ticket_data.csv (optional, uses default if not provided)",
     )
     parser.add_argument(
         "--conversations-dir",
         type=str,
-        help="Path to Conversation folder (optional, uses default if not provided)"
+        help="Path to Conversation folder (optional, uses default if not provided)",
     )
     
     args = parser.parse_args()
     
-    # Load test data
     print("Loading test data...")
     test_cases = load_benchmark_dataset(
         csv_path=args.csv_path,
@@ -181,10 +189,13 @@ if __name__ == "__main__":
     )
     print(f"✓ Loaded {len(test_cases)} test cases")
     
-    # Run benchmark
-    results = run_benchmark(
+    run_benchmark(
         models=args.models,
         test_cases=test_cases,
         max_retries=args.max_retries,
         output_dir=args.output_dir,
     )
+
+
+if __name__ == "__main__":
+    main()
